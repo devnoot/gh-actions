@@ -21,7 +21,7 @@ jobs:
 
       - name: Check if the version has a tag
         run: |
-          if git tag -l ${{ env.VERSION }}; then
+          if [[ git tag -l ${{ env.VERSION }} ]]; then
             echo "VERSION_TAGGED=true" >> $GITHUB_ENV
           else
             echo "VERSION_TAGGED=false" >> $GITHUB_ENV

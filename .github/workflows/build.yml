@@ -12,15 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set version
-        id: set-version
-        run: echo "VERSION=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV 
+      - name: Create dist folder
+        run: mkdir -p dist
+      - name: Get the OS architecture
+        id: get_arch
+        run: echo "ARCH=x86_$(getconf LONG_BIT)" >> $GITHUB_ENV
+      - name: Get the version number
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
       - name: Build src/main.cpp 
-        run: g++ src/main.cpp -o main
-      - name: Zip the release
+        run: g++ src/main.cpp -o dist/main
+      - name: Tar the release
         run: | 
-          zip -r release-${{ env.VERSION }}.zip main
+          tar -czvf dist/main-${{ env.VERSION }}-${{ env.ARCH }}.tar.gz dist/main
       - name: Configure Git
         run: |
           git config user.name "GitHub Actions"
           git config user.email "noreply@github.com"
+      - name: Create the release
+        run: |
+          gh release create ${{ env.VERSION }} ./dist/*.tar.gz --generate-notes 

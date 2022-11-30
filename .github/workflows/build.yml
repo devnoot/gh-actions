@@ -1,0 +1,26 @@
+name: Build 
+
+on: 
+
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set version
+        id: set-version
+        run: echo "VERSION=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV 
+      - name: Build src/main.cpp 
+        run: g++ src/main.cpp -o main
+      - name: Zip the release
+        run: | 
+          zip -r release-${{ env.VERSION }}.zip main
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "noreply@github.com"

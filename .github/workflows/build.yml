@@ -31,3 +31,5 @@ jobs:
       - name: Create the release
         run: |
           gh release create ${{ env.VERSION }} ./dist/*.tar.gz --generate-notes 
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN}}

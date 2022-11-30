@@ -26,6 +26,9 @@ jobs:
           else
             echo "VERSION_TAGGED=false" >> $GITHUB_ENV
           fi
+      
+      - name: Echo VERSION_TAGGED
+        run: echo ${{ env.VERSION_TAGGED }}
 
       - name: Create dist folder
         if: ${{ env.VERSION_TAGGED == 'false' }}
